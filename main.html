@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INDICADORES</title>
+    <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-app.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase-messaging.js"></script> -->
+    <!-- <script src="assets/jquery.js"></script> -->
+	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="assets/bootstrap.min.js"></script>
+    <style>
+        h1 {
+            font-style: italic;
+            background: #e8ebef;
+            padding-left: 20px
+        }
+
+        #img {
+            margin-left: 60px;
+            display: block;
+            width: 500px;
+            opacity: 0.5;
+        }
+
+        #img:hover {
+            cursor: pointer;
+
+            opacity: 1;
+        }
+
+        table {
+            margin-top: 17px
+        }
+
+        tbody, tr, td, th {
+            text-align: center
+        }
+
+        h1:hover {
+            cursor: pointer;
+        }
+
+        #header {
+            height: 50px;
+            background: #4286f4
+        }
+
+        .btn-link {
+            color: #393d77
+        }
+    </style>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCstMJ3fOd7Rczta4kdBpUMtJ4l0jfMC0E",
+            authDomain: "inquid-1363.firebaseapp.com",
+            databaseURL: "https://inquid-1363.firebaseio.com",
+            storageBucket: "inquid-1363.appspot.com",
+            messagingSenderId: "404184363170"
+        };
+        firebase.initializeApp(config);
+        var arrNumber = [];
+        var defaultDatabase = firebase.database();
+
+
+        var col = '';
+        var collection = '';
+        var e_key = '';
+        var flag = 0;
+
+        function getValues(db_id) {
+            console.log(db_id, col);
+            var ref = firebase.database().ref(db_id);
+            if (col != db_id) {
+                col = db_id;
+                $('#' + db_id).css('display', 'block');
+                ref.on('value', function (mainSnapshot) {
+                    $("#" + db_id + "_tbody").html('');
+                    mainSnapshot.forEach(function (snapshotValue) {
+                        $("#" + db_id + "_tbody").append("<tr><td>" + snapshotValue.key + "</td><td>" + snapshotValue.val() + "</td><td><button class='btn btn-success' onclick='edit_tr(\"" + db_id + "\",\"" + snapshotValue.key + "\"," + snapshotValue.val() + ")') >Editar</button></td><td><button class='btn btn-danger' onclick='delete_tr(\"" + db_id + "\",\"" + snapshotValue.key + "\")'>Borrar</button></td></tr>");
+                        console.log(db_id, snapshotValue.val());
+                    });
+                });
+            } else {
+                $('#' + db_id).css('display', 'none');
+                col = '';
+            }
+        }
+
+        function getIpc() {
+            return 2926;
+        }
+        function getCetes() {
+            return 6.47;
+        }
+        function getCrecimiento() {
+            return 1.9;
+        }
+        function getEuros() {
+            return 19.78;
+        }
+        function getInflacion() {
+            return 5.74;
+        }
+        function getTasa() {
+            return 6.85;
+        }
+        function getPetroleo() {
+            return 52.85;
+        }
+        function getLibras() {
+            return 23.59;
+        }
+        function getDolares() {
+            return 18.47;
+        }
+
+        function addvalue(id) {
+            col = id;
+            $('#ModalEdit').modal('show');
+            var defaultValue = 0;
+            if (col == 'ipc') {
+                defaultValue = getIpc();
+            }
+            if (col == 'cetes_28_dias') {
+                defaultValue = getCetes();
+            }
+            if (col == 'crecimiento_economia') {
+                defaultValue = getCrecimiento();
+            }
+            if (col == 'eur_to_mxn') {
+                defaultValue = getEuros();
+            }
+            if (col == 'inflacion') {
+                defaultValue = getInflacion();
+            }
+            if (col == 'tasa_interes') {
+                defaultValue = getTasa();
+            }
+            if (col == 'petroleo') {
+                defaultValue = getPetroleo();
+            }
+            if (col == 'gbp_to_mxn') {
+                defaultValue = getLibras();
+            }
+            if (col == 'usd_to_mxn') {
+                defaultValue = getDolares();
+            }
+            $("#value").val(defaultValue);
+        }
+        function addval() {
+            var keypp = $("#date").val().toString();
+            var val = $("#value").val();
+            if (keypp == '' || val == '') {
+                alert('Valor inválido');
+                return false;
+            }
+            if (keypp == '' && val == '') {
+                alert('Valor Inválido');
+                return false;
+            }
+
+            if (col == 'ipc') {
+                ipc = {};
+                ipc[keypp + ''] = val;
+                console.log(ipc);
+                firebase.database().ref('ipc').update(ipc);
+            }
+            if (col == 'bancos') {
+                bancos = {};
+                bancos[keypp + ''] = val;
+                console.log(bancos);
+                firebase.database().ref('bancos').update(bancos);
+            }
+            if (col == 'cetes_28_dias') {
+                cetes_28_dias = {};
+                cetes_28_dias[keypp + ''] = val;
+                console.log(cetes_28_dias);
+                firebase.database().ref('cetes_28_dias').update(cetes_28_dias);
+            }
+            if (col == 'crecimiento_economia') {
+                crecimiento_economia = {};
+                crecimiento_economia[keypp + ''] = val;
+                console.log(crecimiento_economia);
+                firebase.database().ref('crecimiento_economia').update(crecimiento_economia);
+            }
+            if (col == 'eur_to_mxn') {
+                eur_to_mxn = {};
+                eur_to_mxn[keypp + ''] = val;
+                console.log(eur_to_mxn);
+                firebase.database().ref('eur_to_mxn').update(eur_to_mxn);
+            }
+            if (col == 'inflacion') {
+                inflacion = {};
+                inflacion[keypp + ''] = val;
+                console.log(inflacion);
+                firebase.database().ref('inflacion').update(inflacion);
+            }
+            if (col == 'tasa_interes') {
+                tasa_interes = {};
+                tasa_interes[keypp + ''] = val;
+                console.log(tasa_interes);
+                firebase.database().ref('tasa_interes').update(tasa_interes);
+            }
+            if (col == 'petroleo') {
+                petroleo = {};
+                petroleo[keypp + ''] = val;
+                console.log(petroleo);
+                firebase.database().ref('petroleo').update(petroleo);
+            }
+            if (col == 'cuentas_cobrar') {
+                cuentas_cobrar = {};
+                cuentas_cobrar[keypp + ''] = val;
+                console.log(cuentas_cobrar);
+                firebase.database().ref('cuentas_cobrar').update(cuentas_cobrar);
+            }
+            if (col == 'cuentas_pagar') {
+                cuentas_pagar = {};
+                cuentas_pagar[keypp + ''] = val;
+                console.log(cuentas_pagar);
+                firebase.database().ref('cuentas_pagar').update(cuentas_pagar);
+            }
+            if (col == 'egresos') {
+                egresos = {};
+                egresos[keypp + ''] = val;
+                console.log(egresos);
+                firebase.database().ref('egresos').update(egresos);
+            }
+            if (col == 'ingresos_totales') {
+                ingresos_totales = {};
+                ingresos_totales[keypp + ''] = val;
+                console.log(ingresos_totales);
+                firebase.database().ref('ingresos_totales').update(ingresos_totales);
+            }
+            if (col == 'utilidad') {
+                utilidad = {};
+                utilidad[keypp + ''] = val;
+                console.log(utilidad);
+                firebase.database().ref('utilidad').update(utilidad);
+            }
+            if (col == 'ventas') {
+                ventas = {};
+                ventas[keypp + ''] = val;
+                console.log(ventas);
+                firebase.database().ref('ventas').update(ventas);
+            }
+            if (col == 'volumen_produccion') {
+                volumen_produccion = {};
+                volumen_produccion[keypp + ''] = val;
+                console.log(volumen_produccion);
+                firebase.database().ref('volumen_produccion').update(volumen_produccion);
+            }
+            if (col == 'gbp_to_mxn') {
+                gbp_to_mxn = {};
+                gbp_to_mxn[keypp + ''] = val;
+                console.log(gbp_to_mxn);
+                firebase.database().ref('gbp_to_mxn').update(gbp_to_mxn);
+            }
+            if (col == 'usd_to_mxn') {
+                usd_to_mxn = {};
+                usd_to_mxn[keypp + ''] = val;
+                console.log(usd_to_mxn);
+                firebase.database().ref('usd_to_mxn').update(usd_to_mxn);
+            }
+            if (col == 'bitshares') {
+                bitshares = {};
+                bitshares[keypp + ''] = val;
+                console.log(bitshares);
+                firebase.database().ref('bitshares').update(bitshares);
+            }
+
+            if (col == 'dash') {
+                dash = {};
+                dash[keypp + ''] = val;
+                console.log(dash);
+                firebase.database().ref('dash').update(dash);
+            }
+            if (col == 'ethereum_classic') {
+                ethereum_classic = {};
+                ethereum_classic[keypp + ''] = val;
+                console.log(ethereum_classic);
+                firebase.database().ref('ethereum_classic').update(ethereum_classic);
+            }
+            if (col == 'ethereum') {
+                ethereum = {};
+                ethereum[keypp + ''] = val;
+                console.log(ethereum);
+                firebase.database().ref('ethereum').update(ethereum);
+            }
+            if (col == 'litecoin') {
+                litecoin = {};
+                litecoin[keypp + ''] = val;
+                console.log(litecoin);
+                firebase.database().ref('litecoin').update(litecoin);
+            }
+            if (col == 'monero') {
+                monero = {};
+                monero[keypp + ''] = val;
+                console.log(monero);
+                firebase.database().ref('monero').update(monero);
+            }
+            if (col == 'nem') {
+                nem = {};
+                nem[keypp + ''] = val;
+                console.log(nem);
+                firebase.database().ref('nem').update(nem);
+            }
+            if (col == 'ripple') {
+                ripple = {};
+                ripple[keypp + ''] = val;
+                console.log(ripple);
+                firebase.database().ref('ripple').update(ripple);
+            }
+            if (col == 'stratis') {
+                stratis = {};
+                stratis[keypp + ''] = val;
+                console.log(stratis);
+                firebase.database().ref('stratis').update(stratis);
+            }
+            $("#date").val('');
+            $("#value").val('');
+            $('#ModalEdit').modal('hide');
+        }
+
+        function delete_tr(id1, key) {
+
+            if (id1 == 'ipc') {
+                ipc = {};
+                ipc[key] = null;
+                firebase.database().ref(id1).update(ipc);
+            }
+            if (id1 == 'bancos') {
+                bancos = {};
+                bancos[key] = null;
+                firebase.database().ref(id1).update(bancos);
+            }
+            if (id1 == 'cetes_28_dias') {
+                cetes_28_dias = {};
+                cetes_28_dias[key] = null;
+                firebase.database().ref(id1).update(cetes_28_dias);
+            }
+            if (id1 == 'crecimiento_economia') {
+                crecimiento_economia = {};
+                crecimiento_economia[key] = null;
+                firebase.database().ref(id1).update(crecimiento_economia);
+            }
+            if (id1 == 'eur_to_mxn') {
+                eur_to_mxn = {};
+                eur_to_mxn[key] = null;
+                firebase.database().ref(id1).update(eur_to_mxn);
+            }
+            if (id1 == 'inflacion') {
+                inflacion = {};
+                inflacion[key] = null;
+                firebase.database().ref(id1).update(inflacion);
+            }
+            if (id1 == 'tasa_interes') {
+                tasa_interes = {};
+                tasa_interes[key] = null;
+                firebase.database().ref(id1).update(tasa_interes);
+            }
+            if (id1 == 'petroleo') {
+                petroleo = {};
+                petroleo[key] = null;
+                firebase.database().ref(id1).update(petroleo);
+            }
+            if (id1 == 'cuentas_cobrar') {
+                cuentas_cobrar = {};
+                cuentas_cobrar[key] = null;
+                firebase.database().ref(id1).update(cuentas_cobrar);
+            }
+            if (id1 == 'cuentas_pagar') {
+                cuentas_pagar = {};
+                cuentas_pagar[key] = null;
+                firebase.database().ref(id1).update(cuentas_pagar);
+            }
+            if (id1 == 'egresos') {
+                egresos = {};
+                egresos[key] = null;
+                firebase.database().ref(id1).update(egresos);
+            }
+            if (id1 == 'ingresos_totales') {
+                ingresos_totales = {};
+                ingresos_totales[key] = null;
+                firebase.database().ref(id1).update(ingresos_totales);
+            }
+            if (id1 == 'utilidad') {
+                utilidad = {};
+                utilidad[key] = null;
+                firebase.database().ref(id1).update(utilidad);
+            }
+            if (id1 == 'ventas') {
+                ventas = {};
+                ventas[key] = null;
+                firebase.database().ref(id1).update(ventas);
+            }
+            if (id1 == 'volumen_produccion') {
+                volumen_produccion = {};
+                volumen_produccion[key] = null;
+                firebase.database().ref(id1).update(volumen_produccion);
+            }
+            if (id1 == 'gbp_to_mxn') {
+                gbp_to_mxn = {};
+                gbp_to_mxn[key] = null;
+                firebase.database().ref(id1).update(gbp_to_mxn);
+            }
+            if (id1 == 'usd_to_mxn') {
+                usd_to_mxn = {};
+                usd_to_mxn[key] = null;
+                firebase.database().ref(id1).update(usd_to_mxn);
+            }
+            if (id1 == 'bitshares') {
+                bitshares = {};
+                bitshares[key] = null;
+                firebase.database().ref('bitshares').update(bitshares);
+            }
+
+            if (id1 == 'dash') {
+                dash = {};
+                dash[key] = null;
+                console.log(dash);
+                firebase.database().ref('dash').update(dash);
+            }
+            if (id1 == 'ethereum_classic') {
+                ethereum_classic = {};
+                ethereum_classic[key] = null;
+                console.log(ethereum_classic);
+                firebase.database().ref('ethereum_classic').update(ethereum_classic);
+            }
+            if (id1 == 'ethereum') {
+                ethereum = {};
+                ethereum[key] = null;
+                console.log(ethereum);
+                firebase.database().ref('ethereum').update(ethereum);
+            }
+            if (id1 == 'litecoin') {
+                litecoin = {};
+                litecoin[key] = null;
+                console.log(litecoin);
+                firebase.database().ref('litecoin').update(litecoin);
+            }
+            if (id1 == 'monero') {
+                monero = {};
+                monero[key] = null;
+                console.log(monero);
+                firebase.database().ref('monero').update(monero);
+            }
+            if (id1 == 'nem') {
+                nem = {};
+                nem[key] = null;
+                console.log(nem);
+                firebase.database().ref('nem').update(nem);
+            }
+            if (id1 == 'ripple') {
+                ripple = {};
+                ripple[key] = null;
+                console.log(ripple);
+                firebase.database().ref('ripple').update(ripple);
+            }
+            if (id1 == 'stratis') {
+                stratis = {};
+                stratis[key] = null;
+                console.log(stratis);
+                firebase.database().ref('stratis').update(stratis);
+            }
+        }
+        function edit_tr(id, key, val) {
+            collection = id;
+            e_key = key;
+            //e_val=val;
+            console.log(id, key, val);
+            $('#date1').val(key);
+            $('#value1').val(val)
+            $('#ModalEdit1').modal('show');
+        }
+        function Edit() {
+            var e_val = $("#value1").val();
+            if (e_val == '') {
+                alert('Please insert value!');
+                return false;
+            }
+            if (collection == 'ipc') {
+                ipc = {};
+                ipc[e_key + ''] = e_val;
+                console.log(ipc);
+                firebase.database().ref('ipc').update(ipc);
+            }
+            if (collection == 'bancos') {
+                bancos = {};
+                bancos[e_key + ''] = e_val;
+                console.log(bancos);
+                firebase.database().ref('bancos').update(bancos);
+            }
+            if (collection == 'cetes_28_dias') {
+                cetes_28_dias = {};
+                cetes_28_dias[e_key + ''] = e_val;
+                console.log(cetes_28_dias);
+                firebase.database().ref('cetes_28_dias').update(cetes_28_dias);
+            }
+            if (collection == 'crecimiento_economia') {
+                crecimiento_economia = {};
+                crecimiento_economia[e_key + ''] = e_val;
+                console.log(crecimiento_economia);
+                firebase.database().ref('crecimiento_economia').update(crecimiento_economia);
+            }
+            if (collection == 'eur_to_mxn') {
+                eur_to_mxn = {};
+                eur_to_mxn[e_key + ''] = e_val;
+                console.log(eur_to_mxn);
+                firebase.database().ref('eur_to_mxn').update(eur_to_mxn);
+            }
+            if (collection == 'inflacion') {
+                inflacion = {};
+                inflacion[e_key + ''] = e_val;
+                console.log(inflacion);
+                firebase.database().ref('inflacion').update(inflacion);
+            }
+            if (collection == 'tasa_interes') {
+                tasa_interes = {};
+                tasa_interes[e_key + ''] = e_val;
+                console.log(tasa_interes);
+                firebase.database().ref('tasa_interes').update(tasa_interes);
+            }
+            if (collection == 'petroleo') {
+                petroleo = {};
+                petroleo[e_key + ''] = e_val;
+                console.log(petroleo);
+                firebase.database().ref('petroleo').update(petroleo);
+            }
+            if (collection == 'cuentas_cobrar') {
+                cuentas_cobrar = {};
+                cuentas_cobrar[e_key + ''] = e_val;
+                console.log(cuentas_cobrar);
+                firebase.database().ref('cuentas_cobrar').update(cuentas_cobrar);
+            }
+            if (collection == 'cuentas_pagar') {
+                cuentas_pagar = {};
+                cuentas_pagar[e_key + ''] = e_val;
+                console.log(cuentas_pagar);
+                firebase.database().ref('cuentas_pagar').update(cuentas_pagar);
+            }
+            if (collection == 'egresos') {
+                egresos = {};
+                egresos[e_key + ''] = e_val;
+                console.log(egresos);
+                firebase.database().ref('egresos').update(egresos);
+            }
+            if (collection == 'ingresos_totales') {
+                ingresos_totales = {};
+                ingresos_totales[e_key + ''] = e_val;
+                console.log(ingresos_totales);
+                firebase.database().ref('ingresos_totales').update(ingresos_totales);
+            }
+            if (collection == 'utilidad') {
+                utilidad = {};
+                utilidad[e_key + ''] = e_val;
+                console.log(utilidad);
+                firebase.database().ref('utilidad').update(utilidad);
+            }
+            if (collection == 'ventas') {
+                ventas = {};
+                ventas[e_key + ''] = e_val;
+                console.log(ventas);
+                firebase.database().ref('ventas').update(ventas);
+            }
+            if (collection == 'volumen_produccion') {
+                volumen_produccion = {};
+                volumen_produccion[e_key + ''] = e_val;
+                console.log(volumen_produccion);
+                firebase.database().ref('volumen_produccion').update(volumen_produccion);
+            }
+            if (collection == 'gbp_to_mxn') {
+                gbp_to_mxn = {};
+                gbp_to_mxn[e_key + ''] = e_val;
+                console.log(gbp_to_mxn);
+                firebase.database().ref('gbp_to_mxn').update(gbp_to_mxn);
+            }
+            if (collection == 'usd_to_mxn') {
+                usd_to_mxn = {};
+                usd_to_mxn[e_key + ''] = e_val;
+                console.log(usd_to_mxn);
+                firebase.database().ref('usd_to_mxn').update(usd_to_mxn);
+            }
+            if (collection == 'bitshares') {
+                bitshares = {};
+                bitshares[e_key + ''] = e_val;
+                console.log(bitshares);
+                firebase.database().ref('bitshares').update(bitshares);
+            }
+
+            if (collection == 'dash') {
+                dash = {};
+                dash[e_key + ''] = e_val;
+                console.log(dash);
+                firebase.database().ref('dash').update(dash);
+            }
+            if (collection == 'ethereum_classic') {
+                ethereum_classic = {};
+                ethereum_classic[e_key + ''] = e_val;
+                console.log(ethereum_classic);
+                firebase.database().ref('ethereum_classic').update(ethereum_classic);
+            }
+            if (collection == 'ethereum') {
+                ethereum = {};
+                ethereum[e_key + ''] = e_val;
+                console.log(ethereum);
+                firebase.database().ref('ethereum').update(ethereum);
+            }
+            if (collection == 'litecoin') {
+                litecoin = {};
+                litecoin[e_key + ''] = e_val;
+                console.log(litecoin);
+                firebase.database().ref('litecoin').update(litecoin);
+            }
+            if (collection == 'monero') {
+                monero = {};
+                monero[e_key + ''] = e_val;
+                console.log(monero);
+                firebase.database().ref('monero').update(monero);
+            }
+            if (collection == 'nem') {
+                nem = {};
+                nem[e_key + ''] = e_val;
+                console.log(nem);
+                firebase.database().ref('nem').update(nem);
+            }
+            if (collection == 'ripple') {
+                ripple = {};
+                ripple[e_key + ''] = e_val;
+                console.log(ripple);
+                firebase.database().ref('ripple').update(ripple);
+            }
+            if (collection == 'stratis') {
+                stratis = {};
+                stratis[e_key + ''] = e_val;
+                console.log(stratis);
+                firebase.database().ref('stratis').update(stratis);
+            }
+            $('#ModalEdit1').modal('hide');
+        }
+        var div1 = true;
+        var div2 = true;
+        function fade() {
+            if (div1) {
+                $('#div1').fadeIn(1000);
+                div1 = false;
+            }
+            else {
+                $('#div1').fadeOut(1000);
+                div1 = true;
+            }
+        }
+        function fade1() {
+            if (div2) {
+                $('#div2').fadeIn(1000);
+                div2 = false;
+            }
+            else {
+                $('#div2').fadeOut(1000);
+                div2 = true;
+            }
+        }
+        function logout() {
+            firebase.auth().signOut().then(function () {
+                window.location.href = "index.html";
+            }, function (error) {
+                alert("FIrebase error. Try again.");
+            });
+        }
+
+		
+    </script>
+</head>
+<body>
+<div id="header">
+
+    <button class="btn btn-link" onclick="logout()" style="float:right;margin-top:6px">Log out</button>
+</div>
+<div style='text-align:center'><img src="img/ic_launcher.png" width=20% height=20%></div>
+<h1 onclick="fade()">Indicadores Externos</h1>
+<div id="div1" style="display:none">
+
+    <!--<h2 onclick="getValues('ipc')">IPC</h2>-->
+    <div id='img' onclick="getValues('usd_to_mxn')">
+        <img src='img/dolares.png' width=50 height=50 title='Dolares'>Dolares
+    </div>
+    <div id="usd_to_mxn" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('usd_to_mxn')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="usd_to_mxn_tbody">
+
+            </tbody>
+        </table>
+    </div>
+      <br>
+
+
+
+    <div id='img' onclick="getValues('ipc')">
+        <img src='img/ipc.png' width=50 height=50 title='IPC'>IPC
+    </div>
+    <div id="ipc" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('ipc')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="ipc_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('cetes_28_dias')">Cetes a 28 días</h2>--><br>
+    <div id="img" onclick="getValues('cetes_28_dias')">
+        <img src='img/cetes.png' width=50 height=50 title='Cetes a 28 días'>Cetes a 28 días
+    </div>
+    <div id="cetes_28_dias" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('cetes_28_dias')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="cetes_28_dias_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('crecimiento_economia')">Crecimiento de la Economía</h2>--><br>
+    <div id="img" onclick="getValues('crecimiento_economia')">
+        <img src='img/crecimiento_economía.png' width=50 height=50 title='Crecimiento de la Economía'>Crecimiento de la
+        Economía
+    </div>
+    <div id="crecimiento_economia" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('crecimiento_economia')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="crecimiento_economia_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('eur_to_mxn')">Euros</h2>--><br>
+    <div id="img" onclick="getValues('eur_to_mxn')">
+        <img src='img/euros.png' width=50 height=50 title='Euros'>Euros
+    </div>
+    <div id="eur_to_mxn" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('eur_to_mxn')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="eur_to_mxn_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('gbp_to_mxn')">Libras</h2>--><br>
+    <div id="img" onclick="getValues('gbp_to_mxn')">
+        <img src='img/libras.png' width=50 height=50 title='Libras'>Libras
+    </div>
+    <div id="gbp_to_mxn" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('gbp_to_mxn')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="gbp_to_mxn_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <!--<h2 onclick="getValues('inflacion')">Inflación</h2>--><br>
+    <div id="img" onclick="getValues('inflacion')">
+        <img src='img/inflación.png' width=50 height=50 title='Inflación'>Inflación
+    </div>
+    <div id="inflacion" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('inflacion')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="inflacion_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('tasa_interes')">Tasa de Interés</h2>--><br>
+    <div id="img" onclick="getValues('tasa_interes')">
+        <img src='img/tasa.png' width=50 height=50 title='Tasa de Interés'>Tasa de Interés
+    </div>
+    <div id="tasa_interes" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('tasa_interes')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="tasa_interes_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('petroleo')">Petroleo</h2>--><br>
+    <div id="img" onclick="getValues('petroleo')">
+        <img src='img/petroleo.png' width=50 height=50 title='Petroleo'>Petroleo
+    </div>
+    <div id="petroleo" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('petroleo')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="petroleo_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div id="img" onclick="getValues('bitshares')">
+        <img src='img/Bitshares.png' width=50 height=50 title='Bitshares'>Bitshares
+    </div>
+    <div id="bitshares" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('bitshares')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="bitshares_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div id="img" onclick="getValues('dash')">
+        <img src='img/Dash.png' width=40 height=40 title='Dash'>&nbsp;Dash
+    </div>
+    <div id="dash" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('dash')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="dash_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div id="img" onclick="getValues('ethereum_classic')">
+        <img src='img/Ethereum Classic.png' width=50 height=50 title='Ethereum classic'>Ethereum classic
+    </div>
+    <div id="ethereum_classic" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('ethereum_classic')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="ethereum_classic_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div id="img" onclick="getValues('ethereum')">
+        <img src='img/Ethereum.png' width=50 height=50 title='Ethereum'>Ethereum
+    </div>
+    <div id="ethereum" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('ethereum')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="ethereum_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <div id="img" onclick="getValues('litecoin')">
+        <img src='img/Litecoin.png' width=40 height=40 title='Litecoin'>&nbsp;Litecoin
+    </div>
+    <div id="litecoin" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('litecoin')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="litecoin_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+  <br>
+    <div id="img" onclick="getValues('monero')">
+        <img src='img/monero-diariobitcoin.png' width=40 height=40 title='Monero-diariobitcoin'>&nbsp;Monero-diariobitcoin
+    </div>
+    <div id="monero" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('monero')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="monero_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+      <div id="img" onclick="getValues('nem')">
+          <img src='img/NEM.jpg' width=40 height=40 title='NEM'>NEM
+      </div>
+      <div id="nem" style="width:50%;margin-left:120px;display:none">
+          <button class="btn btn-primary" onclick="addvalue('nem')">Agregar valor</button>
+          <table class="table table-bordered">
+              <thead>
+              <tr>
+                  <th>Fecha</th>
+                  <th>Valor</th>
+                  <th>Editar</th>
+                  <th>Borrar</th>
+              </tr>
+              </thead>
+              <tbody id="nem_tbody">
+
+              </tbody>
+          </table>
+      </div>
+
+      <br>
+        <div id="img" onclick="getValues('ripple')">
+            <img src='img/Ripple.png' width=40 height=40 title='Ripple'>Ripple
+        </div>
+        <div id="ripple" style="width:50%;margin-left:120px;display:none">
+            <button class="btn btn-primary" onclick="addvalue('ripple')">Agregar valor</button>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Valor</th>
+                    <th>Editar</th>
+                    <th>Borrar</th>
+                </tr>
+                </thead>
+                <tbody id="ripple_tbody">
+
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+          <div id="img" onclick="getValues('stratis')">
+              <img src='img/Stratis.png' width=40 height=40 title='Stratis'>Stratis
+          </div>
+          <div id="stratis" style="width:50%;margin-left:120px;display:none">
+              <button class="btn btn-primary" onclick="addvalue('stratis')">Agregar valor</button>
+              <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th>Fecha</th>
+                      <th>Valor</th>
+                      <th>Editar</th>
+                      <th>Borrar</th>
+                  </tr>
+                  </thead>
+                  <tbody id="stratis_tbody">
+
+                  </tbody>
+              </table>
+          </div>
+</div>
+<h1 onclick="fade1()">Indicadores Internos</h1>
+<div id="div2" style="display:none">
+    <!--<h2 onclick="getValues('bancos')">Bancos</h2>--><br>
+    <div id="img" onclick="getValues('bancos')">
+        <img src='img/bancos.png' width=50 height=50 title='Bancos'>Bancos
+    </div>
+    <div id="bancos" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('bancos')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="bancos_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('cuentas_cobrar')">Cuentas por Cobrar</h2>--><br>
+    <div id="img" onclick="getValues('cuentas_cobrar')">
+        <img src='img/cuentas_cobrar.png' width=50 height=50 title='Cuentas por Cobrar'>Cuentas por Cobrar
+    </div>
+    <div id="cuentas_cobrar" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('cuentas_cobrar')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="cuentas_cobrar_tbody">
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <!--<h2 onclick="getValues('cuentas_pagar')">Cuentas por Pagar</h2>--><br>
+    <div id="img" onclick="getValues('cuentas_pagar')">
+        <img src='img/cuentas_pagar.png' width=50 height=50 title='Cuentas por Pagar'>Cuentas por Pagar
+    </div>
+    <div id="cuentas_pagar" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('cuentas_pagar')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="cuentas_pagar_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('egresos')">Egresos</h2>--><br>
+    <div id="img" onclick="getValues('egresos')">
+        <img src='img/egresos.png' width=50 height=50 title='Egresos'>Egresos
+    </div>
+    <div id="egresos" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('egresos')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="egresos_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('ingresos_totales')">Ingresos Totales</h2>--><br>
+    <div id="img" onclick="getValues('ingresos_totales')">
+        <img src='img/ingresos.png' width=50 height=50 title='Ingresos Totales'>Ingresos Totales
+    </div>
+    <div id="ingresos_totales" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('ingresos_totales')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="ingresos_totales_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('utilidad')">Utilidad</h2>--><br>
+    <div id="img" onclick="getValues('utilidad')">
+        <img src='img/utilidad.png' width=50 height=50 title='Utilidad'>Utilidad
+    </div>
+    <div id="utilidad" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('utilidad')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="utilidad_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('ventas')">Ventas</h2>--><br>
+    <div id="img" onclick="getValues('ventas')">
+        <img src='img/ventas.png' width=50 height=50 title='Ventas'>Ventas
+    </div>
+    <div id="ventas" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('ventas')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="ventas_tbody">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<h2 onclick="getValues('volumen_produccion')">Volumen de Producción</h2>--><br>
+    <div id="img" onclick="getValues('volumen_produccion')">
+        <img src='img/volumen_producción.png' width=50 height=50 title='Volumen de Producción'>Volumen de Producción
+    </div>
+    <div id="volumen_produccion" style="width:50%;margin-left:120px;display:none">
+        <button class="btn btn-primary" onclick="addvalue('volumen_produccion')">Agregar valor</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Valor</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+            </thead>
+            <tbody id="volumen_produccion_tbody">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container">
+
+
+  <h2>Sending Notification</h2>
+
+  <div id="volumen_produccion" style="width:50%;margin-left:120px;">
+
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Body</th>
+                <th>Date</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody id="notifications">
+
+            </tbody>
+        </table>
+    </div>
+  <div class="form-horizontal"  style="width:50%">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Title:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="title" placeholder="Enter title" >
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Messsage:</label>
+      <div class="col-sm-10">
+        <textarea  class="form-control" id="notification" placeholder="Enter Message" ></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-primary" onclick="notification()">Send notification</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Agregar</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">Fecha</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="date">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">Valor</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="value">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id" class="form-control" id="id">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-primary" onclick="addval()">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalEdit1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="form-horizontal">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Editar</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">Fecha</label>
+                        <div class="col-sm-10">
+                            <input type="date" class="form-control" id="date1" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label">Valor</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="value1">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id" class="form-control" id="id">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-primary" onclick="Edit()">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
